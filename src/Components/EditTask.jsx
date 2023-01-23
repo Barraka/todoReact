@@ -16,9 +16,15 @@ function EditTask(props) {
         if(formInfo.title==='') {
             inputRef.current.reportValidity();
         } else {
-            await props.updateTask(formInfo);
+            await props.parentProps.updateTask(formInfo);
             props.toggleEdit();
             props.setClassPrio(`taskcard prio${formInfo.priority}`);
+            props.parentProps.setTasks(prev=>{
+                let temp=[...prev];
+                const index=temp.findIndex(x=>x.id===formInfo.id)
+                temp[index]=formInfo;
+                return temp;
+            })
         }
         
     }
@@ -38,7 +44,7 @@ function EditTask(props) {
                     <textarea className="forminput" id="desc" placeholder="A brief description..." rows="2" value={formInfo.description} onChange={e=>setFormInfo(prev=>{return {...prev, description:e.target.value }})}></textarea>
                 </div>
                 <PrioChooser setFormInfo={setFormInfo} formInfo={formInfo}/>
-                <AddToProject formInfo={formInfo} getProjects={props.getProjects} projects={props.projects} task={props.task} setFormInfo={setFormInfo} createProject={props.createProject}/>
+                <AddToProject parentProps={props.parentProps} formInfo={formInfo} task={props.task} setFormInfo={setFormInfo} />
                 <div className="formouter">
                     <label className="formlabel">Due:</label>
                     <input className="forminput" type="date" value = {formInfo.dueDate} onChange={e=>setFormInfo(prev=>{return {...prev, dueDate:e.target.value }})}/>

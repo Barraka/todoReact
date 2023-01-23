@@ -2,15 +2,17 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
 
-
 const firebaseConfig = {
-    apiKey: "AIzaSyASR3II6wB2ix6dj2avNMj5wghEfbzr77M",
-    authDomain: "codelab2-c5f99.firebaseapp.com",
-    projectId: "codelab2-c5f99",
-    storageBucket: "codelab2-c5f99.appspot.com",
-    messagingSenderId: "885075384606",
-    appId: "1:885075384606:web:45a15741c36db6e81c110f"
-};
+    apiKey: "AIzaSyCPeO8O8rJAckBkuhtOcZE6RE2bZEX-nhk",
+    authDomain: "mydolist1.firebaseapp.com",
+    databaseURL: "https://mydolist1-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "mydolist1",
+    storageBucket: "mydolist1.appspot.com",
+    messagingSenderId: "589204967185",
+    appId: "1:589204967185:web:bb2a67ef60a30363d9c6b0",
+    measurementId: "G-W8KG01L0JR"
+  };
 
 const app = initializeApp(firebaseConfig);
-export const db= getFirestore(app);
+const db= getFirestore(app);
+export {db as default};

@@ -12,6 +12,19 @@ function EditProjectName(props) {
             inputRef.current.reportValidity();
         } else {
             props.update(project);
+            props.parentProps.setProjects(prev=>{
+                let temp=[...prev];
+                const index=temp.findIndex(x=>x.id===project.id)
+                temp[index]=project;
+                return temp;
+            });
+
+            //Update corresponding tasks:
+            let temp=[...props.parentProps.tasks];
+            temp.forEach(x=> {
+                if(x.projectid===project.id)x.project=project.title;
+            });
+            props.parentProps.setTasks(temp);
         }
     }
 

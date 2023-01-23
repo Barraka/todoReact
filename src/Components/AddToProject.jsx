@@ -7,7 +7,7 @@ function AddToProject(props) {
     const [select, setSelect] = useState(''); //react doesn't like the 'selected' attribute
 
     useEffect(()=>{
-        const output=props.projects.map(x=> {
+        const output=[...props.parentProps.projects].map(x=> {
             if(props.formInfo.projectid===x.id) {
                 setSelect(x.title);
                 return <option key={x.id} data-id={x.id} className="optiondiv" value={x.title}>{x.title}</option>
@@ -15,7 +15,7 @@ function AddToProject(props) {
         return<option key={x.id} data-id={x.id} className="optiondiv" value={x.title}>{x.title}</option>
         });
         setProjects(output);
-    },[props.formInfo, props.projects]);  
+    },[props.formInfo, props.parentProps.projects]);  
 
     function getselected(e) {
         const select = document.querySelector('select');
@@ -38,7 +38,7 @@ function AddToProject(props) {
                 <option className="optiondiv" value=''></option>
                 {projects}                
             </select>
-            <div className="createProject" onClick={()=>setDisplayAdd(<CreateProject selectNewProject={selectNewProject} createProject={props.createProject} setDisplayAdd={setDisplayAdd}/>)}>
+            <div className="createProject" onClick={()=>setDisplayAdd(<CreateProject selectNewProject={selectNewProject} parentProps={props.parentProps} setDisplayAdd={setDisplayAdd}/>)}>
                 <svg xmlns="http://www.w3.org/2000/svg" height="48" width="48">
                     <path d="M22.5 38V25.5H10v-3h12.5V10h3v12.5H38v3H25.5V38Z"></path>
                 </svg>

@@ -1,7 +1,8 @@
 {
   "projects": {
-    "default": "codelab2-c5f99",
-    "staging": "codelab2-c5f99"
+    "default": "mydolist1",
+    "staging": "codelab2-c5f99",
+    "prep": "mydolist1"
   },
   "targets": {},
   "etags": {}

@@ -20,8 +20,14 @@ function List(props) {
     },[listObject]);
 
     function validate() {
-        props.updateList(listObject);
+        props.parentProps.updateList(listObject);
         setEdit('');
+        props.parentProps.setLists(prev=>{
+            let temp=[...prev];
+            const index=temp.findIndex(x=>x.id===listObject.id)
+            temp[index]=listObject;
+            return temp;
+        })
     }
     function toggleEdit() {
         setEdit(
@@ -32,8 +38,9 @@ function List(props) {
     }
     function listDelete() {
         setnameClass('categoryOuter projectDelete');
-        setTimeout(()=> {
-            props.deleteList(listObject)
+        setTimeout(async ()=> {
+            const tempData= await props.parentProps.deleteList(listObject)
+            props.parentProps.setLists(tempData);
         }, 300);                
     }
 

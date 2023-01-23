@@ -7,18 +7,20 @@ function AddProject(props) {
     const[output, setOutput] = useState('');
     const inputRef=useRef(null);
     useEffect(()=>{
-        const temp=props.projects;
+        const temp=[...props.parentProps.projects];
         let temp2;
         if(temp){temp2=temp.map(x=>(<div className='projectList' key={x.id}>{x.title}</div>));};
         setOutput(temp2);
-    },[props.projects]);
-    function submitProject() {
+    },[props.parentProps.projects]);
+    async function submitProject() {
         if(formInfo.title==="") {
             inputRef.current.reportValidity();
         }
         else {
-            props.createProject(formInfo);
-            props.toggleVisbility();
+            const result = await props.parentProps.createProject(formInfo);
+            props.parentProps.toggleVisbility();
+            const tempVal=[...props.parentProps.projects, {...formInfo, id:result}];
+            props.parentProps.setProjects(tempVal);
         }        
     }
 

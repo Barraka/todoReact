@@ -14,10 +14,10 @@ function AddItems(props) {
     const [output, setOutput] = useState('');
 
     function selectMenu(s) {
-        if(s==='task')setOutput(<AddTask createProject={props.createProject} getProjects={props.getProjects} projects={props.projects} toggleVisbility={props.toggleVisbility} createTask={props.createTask}/>);
-        else if(s==='project')setOutput(<AddProject projects={props.projects} toggleVisbility={props.toggleVisbility} createProject={props.createProject}/>);
+        if(s==='task')setOutput(<AddTask parentProps={props} />);
+        else if(s==='project')setOutput(<AddProject  parentProps={props} />);
         else if(s==='list') {
-            setOutput(<AddList lists={props.lists} createList={props.createList} updateList={props.updateList} deleteList={props.deleteList} toggleVisbility={props.toggleVisbility} />);
+            setOutput(<AddList  parentProps={props} />);
         }
     }
     useEffect(()=>{
@@ -27,11 +27,11 @@ function AddItems(props) {
         selectMenu('task');
     },[props.projects]);
 
-    const [visibility, setVisibility] = useState('taskcontainer taskcontainerhidden');
-    useEffect(()=> {
-        if(props.visibility===0)setVisibility('taskcontainer taskcontainerhidden');
-        else setVisibility(prev=>'taskcontainer taskcontainervisible');
-    }, [props.visibility]);
+    // const [visibility, setVisibility] = useState('taskcontainer taskcontainerhidden');
+    // useEffect(()=> {
+    //     if(props.visibility===0)setVisibility('taskcontainer taskcontainerhidden');
+    //     else setVisibility(prev=>'taskcontainer taskcontainervisible');
+    // }, [props.visibility]);
 
 
     //-----------------------------

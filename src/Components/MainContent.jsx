@@ -30,6 +30,7 @@ function MainContent(props) {
     let tomorrow=[];
     let upcoming=[];
     function sortTasks() {
+        if(!props.tasks)return;
         overdue=[];
         today=[];
         tomorrow=[];
@@ -53,46 +54,45 @@ function MainContent(props) {
                 else upcoming.push(x);
             });
         }
-        
     }
 
-    useEffect(()=>{
-        if(props.content==='home') {
+    useEffect(()=>{        
+
+        if(props.content==='home') {            
             let tempoutput=[];
-            
             sortTasks();
             if(overdue.length) {
                 tempoutput.push((<div key='overdue' className="todaytxt categorytxt">Overdue</div>));
-                overdue.forEach(x=>tempoutput.push((<Task deleteTask={props.deleteTask} getProjects={props.getProjects} createProject={props.createProject} projects={props.projects} task={x} key={x.id} setStickyBD={props.setStickyBD} setEdit={props.setEdit} updateTask={props.updateTask}/>)));
+                overdue.forEach(x=>tempoutput.push((<Task parentProps={props} task={x} key={x.id} />)));
             }
             if(today.length) {
                 tempoutput.push((<div key='today' className="todaytxt categorytxt">Today</div>));
-                today.forEach(x=>tempoutput.push((<Task deleteTask={props.deleteTask} getProjects={props.getProjects} createProject={props.createProject} projects={props.projects} task={x} key={x.id} setStickyBD={props.setStickyBD} setEdit={props.setEdit} updateTask={props.updateTask}/>)));
+                today.forEach(x=>tempoutput.push((<Task parentProps={props} task={x} key={x.id} />)));
             }
             if(tomorrow.length) {
                 tempoutput.push((<div key='tomorrow' className="todaytxt categorytxt">Tomorrow</div>));
-                tomorrow.forEach(x=>tempoutput.push((<Task deleteTask={props.deleteTask} getProjects={props.getProjects} createProject={props.createProject} projects={props.projects} task={x} key={x.id} setStickyBD={props.setStickyBD} setEdit={props.setEdit} updateTask={props.updateTask}/>)));
+                tomorrow.forEach(x=>tempoutput.push((<Task parentProps={props} task={x} key={x.id} />)));
             }
             if(upcoming.length) {
                 tempoutput.push((<div key='upcoming' className="todaytxt categorytxt">Upcoming</div>));
-                upcoming.forEach(x=>tempoutput.push((<Task deleteTask={props.deleteTask} getProjects={props.getProjects} createProject={props.createProject} projects={props.projects} task={x} key={x.id} setStickyBD={props.setStickyBD} setEdit={props.setEdit} updateTask={props.updateTask}/>)));
+                upcoming.forEach(x=>tempoutput.push((<Task parentProps={props} task={x} key={x.id} />)));
             }
-
             setOutput(tempoutput);
         }
         else if(props.content==='projects') {
             let tempoutput=[];
             const curProjects=props.projects;
-            if(curProjects)curProjects.forEach(x=>tempoutput.push((<Project deleteProject={props.deleteProject} tasks={props.tasks} project={x} key={x.id} setStickyBD={props.setStickyBD} setEdit={props.setEdit} updateProject={props.updateProject}/>)));
+            curProjects.forEach(x=>tempoutput.push((<Project parentProps={props} project={x} key={x.id} />)));
             setOutput(tempoutput);
         }
         else if(props.content==='lists') {
             let tempoutput=[];
             const curList=props.lists;
-            if(curList)curList.forEach(x=>tempoutput.push((<List updateList={props.updateList} deleteList={props.deleteList} list={x} key={x.id} setStickyBD={props.setStickyBD} setEdit={props.setEdit} />)));
+            curList.forEach(x=>tempoutput.push((<List parentProps={props} list={x} key={x.id} />)));
             setOutput(tempoutput);
         }
-    },[props.content, props.tasks, props.projects, props.lists]);    
+    // },[props.crudOperations]);   
+    },[props.content, props.tasks, props.projects, props.lists]); 
 
     return (
         <div className='maincontent'>

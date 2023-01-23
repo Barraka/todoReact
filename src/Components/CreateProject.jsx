@@ -6,9 +6,11 @@ function CreateProject(props) {
     });
 
     async function submitProject() {
-        const id = await props.createProject(formInfo);
+        const id = await props.parentProps.createProject(formInfo);
+        props.parentProps.setProjects(prev=>[...prev, {...formInfo, id: id}]);
         props.selectNewProject(id, formInfo.title);
         props.setDisplayAdd('');
+        props.parentProps.getProjects();
     }
 
     return (

@@ -2,17 +2,17 @@ import React, { useEffect, useState } from 'react'
 import EditTask from './EditTask';
 
 function Task(props) {
-    const cTask=props.task;
+    const  [cTask, setcTask] = useState({});
     const [showEdit, setShowEdit] = useState(false);
     const [classPrio, setClassPrio] = useState('taskcard prio0');
     const [check, setCheck] = useState(<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24"><path d="M5 21q-.825 0-1.413-.587Q3 19.825 3 19V5q0-.825.587-1.413Q4.175 3 5 3h14q.825 0 1.413.587Q21 4.175 21 5v14q0 .825-.587 1.413Q19.825 21 19 21Zm0-2h14V5H5v14Z"/></svg>);
-    useEffect(()=> {
-        const val=cTask.priority;
-        setClassPrio(val==='1'? 'taskcard prio1' : val==='2' ? 'taskcard prio2' : val==='3' ? 'taskcard prio3' : 'taskcard prio0');
-    },[]);
+
     useEffect(()=>{
-    
-    },[props.projects]);
+        setcTask(props.task);
+        const val=props.task.priority;
+        setClassPrio(val==='1'? 'taskcard prio1' : val==='2' ? 'taskcard prio2' : val==='3' ? 'taskcard prio3' : 'taskcard prio0');
+    },[props.task]);
+
     function toggleEdit() {
         if(showEdit)setShowEdit(false);
         else setShowEdit(true);
@@ -21,20 +21,26 @@ function Task(props) {
     function validate(e) {
         setCheck(<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24"><path d="m10.6 16.2 7.05-7.05-1.4-1.4-5.65 5.65-2.85-2.85-1.4 1.4ZM5 21q-.825 0-1.413-.587Q3 19.825 3 19V5q0-.825.587-1.413Q4.175 3 5 3h14q.825 0 1.413.587Q21 4.175 21 5v14q0 .825-.587 1.413Q19.825 21 19 21Zm0-2h14V5H5v14ZM5 5v14V5Z"/></svg>);
         setTimeout(()=> {
-            setClassPrio(prev=>'taskcard prio0 validate');
+            setClassPrio('taskcard prio0 validate');
         },300);
-        setTimeout(()=> {
-            props.deleteTask(props.task)
+        setTimeout(async ()=> {
+            const tempData= await props.parentProps.deleteTask(props.task);
+            props.parentProps.setTasks(tempData);
         },600);
     }
-    function taskDelete() {
-        setClassPrio(prev=>'taskcard prio0 squeeze');
-        props.deleteTask(cTask);
+    async function taskDelete() {
+        setClassPrio('taskcard prio0 squeeze');
+        setTimeout(async ()=> {
+            props.parentProps.deleteTask(cTask);
+            const res=await props.parentProps.getTasks();
+            props.parentProps.setTasks(res);
+        },300);        
     }   
 
+    if(!cTask) return ('');
     return (
         <div className={classPrio} data-id={cTask.id}>
-            {showEdit ? <EditTask getProjects={props.getProjects} createProject={props.createProject} projects = {props.projects} toggleEdit={toggleEdit} task={cTask} updateTask={props.updateTask} setClassPrio={setClassPrio}/> : null}
+            {showEdit ? <EditTask toggleEdit={toggleEdit} parentProps={props.parentProps} task={cTask} setClassPrio={setClassPrio}/> : null}
             
             <div className="checkbox" checked onClick={validate}>
             {check}

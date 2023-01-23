@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import EditProjectName from './EditProjectName';
 
 function Project (props) {
-    
     const [project, setProject] = useState({});
     const [relatedTasks, setRelatedTasks] = useState([]);
     const [nameClass, setnameClass] = useState('wrapper');
@@ -14,7 +13,7 @@ function Project (props) {
     
     //Insert related tasks
     useEffect(()=>{
-        let temp=[...props.tasks];
+        let temp=[...props.parentProps.tasks];
         temp=temp.filter(x=>x.projectid===project.id);
         temp=temp.map(x=>(<li className='partOfaProject' key={x.id}>{x.title}</li>));
         setRelatedTasks(temp);
@@ -22,24 +21,35 @@ function Project (props) {
 
     function update(o) {
         setProject(o);
-        props.updateProject(o);
+        props.parentProps.updateProject(o);
         setDisplayEdit('');
+        props.parentProps.setProjects(prev=>{
+                let temp=[...prev];
+                const index=temp.findIndex(x=>x.id===o.id)
+                temp[index]=o;
+                return temp;
+            })
+        let temp=[...props.parentProps.tasks];
+        temp.forEach(x=> {
+        if(x.projectid===o.id)x.project=o.title;
+        });
+        props.parentProps.setTasks(temp);
     }
 
     function editProject() {
-        setDisplayEdit(<EditProjectName project={project} setProject={setProject} update={update} />);
+        setDisplayEdit(<EditProjectName parentProps={props.parentProps} project={project} setProject={setProject} update={update} />);
     }
-    function projectDelete() {
+    async function projectDelete() {
         if(relatedTasks.length) {
             alert('You cannot delete a project with existing tasks');
         } else {
             setnameClass('wrapper projectDelete');
-            setTimeout(()=> {
-                props.deleteProject(props.project)
+            setTimeout(async ()=> {
+                const tempData= await props.parentProps.deleteProject(props.project);
+                props.parentProps.setProjects(tempData);
             }, 300);
         }                
     }
-
 
     return (
         <div className={nameClass}>
